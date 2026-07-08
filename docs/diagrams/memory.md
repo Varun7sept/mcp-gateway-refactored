@@ -1,6 +1,6 @@
-﻿# memory
+# memory
 
-``mermaid
+```mermaid
 graph TB
     subgraph "Memory Store (internal/ai/memory.go)"
         MS[MemoryStore]
@@ -30,9 +30,9 @@ graph TB
     end
 
     subgraph "Scoring Algorithm"
-        TA[Tokenize query â†’ words A]
-        TB[Tokenize entry.Query + entry.Answer â†’ words B]
+        TA[Tokenize query → words A]
+        TB[Tokenize entry.Query + entry.Answer → words B]
         TC[Count case-insensitive matches]
     end
 
-``
+```

@@ -1,6 +1,6 @@
-﻿# sequence_healthcheck
+# sequence_healthcheck
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant HC as Health Checker<br/>goroutine
     participant REG as Registry
@@ -40,9 +40,9 @@ sequenceDiagram
             S7-->>HC: 200 OK
         end
 
-        alt Status changed (down â†’ up or up â†’ down)
+        alt Status changed (down → up or up → down)
             HC->>LOG: Log("health", server.Name, ...)
         end
     end
 
-``
+```

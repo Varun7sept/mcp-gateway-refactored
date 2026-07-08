@@ -1,6 +1,6 @@
-﻿# request_flow
+# request_flow
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant B as Browser
     participant MW as Middleware
@@ -56,4 +56,4 @@ sequenceDiagram
     H->>CS: AddMessage(ctx, id, "ai", answer, meta)
     H-->>B: {answer, steps, tools_used, latency}
 
-``
+```

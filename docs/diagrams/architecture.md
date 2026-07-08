@@ -1,6 +1,6 @@
-﻿# architecture
+# architecture
 
-``mermaid
+```mermaid
 graph TB
     subgraph External
         Browser[Browser]
@@ -91,4 +91,4 @@ graph TB
     NOTES --> SQLite[(SQLite)]
     AUTH --> MongoDB
 
-``
+```

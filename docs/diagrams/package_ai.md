@@ -1,6 +1,6 @@
-﻿# package_ai
+# package_ai
 
-``mermaid
+```mermaid
 graph TB
     subgraph "internal/ai package"
         M[Manager<br/>manager.go]
@@ -27,4 +27,4 @@ graph TB
 
     M ---|exported: New, Memory, DecideAction, SynthesizeAnswer, RunAgent| EXT[External Callers]
 
-``
+```

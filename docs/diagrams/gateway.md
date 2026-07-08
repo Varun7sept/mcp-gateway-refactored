@@ -1,6 +1,6 @@
-﻿# gateway
+# gateway
 
-``mermaid
+```mermaid
 graph TB
     subgraph "internal/mcp package"
         G[Gateway<br/>gateway.go]
@@ -47,4 +47,4 @@ graph TB
         F_RESULT[Return ForwardResult]
     end
 
-``
+```

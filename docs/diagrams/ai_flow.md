@@ -1,6 +1,6 @@
-﻿# ai_flow
+# ai_flow
 
-``mermaid
+```mermaid
 graph TB
     CHAT[Chat Handler] -->|RunAgent| MAN[Manager]
 
@@ -35,4 +35,4 @@ graph TB
 
     MAN -->|save| MEM
 
-``
+```

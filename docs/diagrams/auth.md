@@ -1,6 +1,6 @@
-﻿# auth
+# auth
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant U as User
     participant H as HTTP Server
@@ -29,7 +29,7 @@ sequenceDiagram
         A->>DB: FindOne(users collection)
         DB-->>A: User document
         A->>A: bcrypt.CompareHashAndPassword
-        A->>A: generateToken() â†’ JWT (HS256, 7 day)
+        A->>A: generateToken() → JWT (HS256, 7 day)
         A-->>AH: token
         AH-->>U: 200 {token, username}
     end
@@ -45,4 +45,4 @@ sequenceDiagram
         MW->>H: next(w, r.WithContext(ctx))
     end
 
-``
+```

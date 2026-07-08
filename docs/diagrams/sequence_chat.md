@@ -1,6 +1,6 @@
-﻿# sequence_chat
+# sequence_chat
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant B as Browser
     participant MW as Middleware
@@ -58,4 +58,4 @@ sequenceDiagram
     CH->>CS: AddMessage(ctx, id, "ai", answer, meta)
     CH-->>B: 200 {answer, steps, tools_used, latency}
 
-``
+```

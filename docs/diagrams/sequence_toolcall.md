@@ -1,6 +1,6 @@
-﻿# sequence_toolcall
+# sequence_toolcall
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant M as AI Manager
     participant GW as Gateway<br/>ForwardToolCall
@@ -19,7 +19,7 @@ sequenceDiagram
 
     GW->>FWD: forwardToServer(ctx, server, req)
 
-    FWD->>FWD: json.Marshal(req) â†’ body
+    FWD->>FWD: json.Marshal(req) → body
     FWD->>SRV: HTTP POST http://localhost:3001/mcp/message
     Note over SRV: Server routes to tool handler
     SRV-->>FWD: HTTP 200 + JSON-RPC response
@@ -31,4 +31,4 @@ sequenceDiagram
     M->>M: extractToolText(response)
     M->>M: Append result to conversation history
 
-``
+```

@@ -1,6 +1,6 @@
-﻿# startup
+# startup
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant Main as cmd/server/main.go
     participant Config as internal/common/config.go
@@ -54,4 +54,4 @@ sequenceDiagram
     Main->>Server: Start()
     Note over Server: HTTP listener on :8080
 
-``
+```

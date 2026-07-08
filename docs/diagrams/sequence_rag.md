@@ -1,6 +1,6 @@
-﻿# sequence_rag
+# sequence_rag
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant B as Browser
     participant CH as ChatHandler
@@ -30,4 +30,4 @@ sequenceDiagram
     M-->>CH: answer synthesised from document
     CH-->>B: 200 {answer: "The document says..."}
 
-``
+```

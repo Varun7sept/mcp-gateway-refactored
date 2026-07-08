@@ -1,6 +1,6 @@
-﻿# package_web
+# package_web
 
-``mermaid
+```mermaid
 graph TB
     subgraph "internal/web package"
         S[Server<br/>server.go]
@@ -34,4 +34,4 @@ graph TB
     S ---|exported: New, Start| EXT
     R ---|exported: Server, New, Start| EXT
 
-``
+```

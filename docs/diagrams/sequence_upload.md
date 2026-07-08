@@ -1,6 +1,6 @@
-﻿# sequence_upload
+# sequence_upload
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant B as Browser
     participant MW as Middleware
@@ -28,4 +28,4 @@ sequenceDiagram
     SRV-->>UH: JSON-RPC Response
     UH-->>B: 200 {success, document_name, text}
 
-``
+```

@@ -1,6 +1,6 @@
-﻿# sequence_login
+# sequence_login
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant B as Browser
     participant S as HTTP Server
@@ -44,4 +44,4 @@ sequenceDiagram
 
     AH-->>B: 200 {token, username, email}
 
-``
+```

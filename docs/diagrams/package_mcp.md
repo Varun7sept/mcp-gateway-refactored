@@ -1,6 +1,6 @@
-﻿# package_mcp
+# package_mcp
 
-``mermaid
+```mermaid
 graph TB
     subgraph "internal/mcp package"
         GW[Gateway<br/>gateway.go]
@@ -18,4 +18,4 @@ graph TB
     REG ---|exported: NewRegistry, FindServerByTool, GetServer, ListServers, ListTools| EXT
     HLTH ---|exported: StartHealthChecker| EXT
 
-``
+```

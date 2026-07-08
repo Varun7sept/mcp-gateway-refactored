@@ -1,6 +1,6 @@
-﻿# mcp
+# mcp
 
-``mermaid
+```mermaid
 sequenceDiagram
     participant C as Caller<br/>(AI Manager / Handler)
     participant G as Gateway<br/>ForwardToolCall
@@ -25,4 +25,4 @@ sequenceDiagram
 
     G-->>C: ForwardResult{ServerName, Response, Latency}
 
-``
+```
