@@ -1,0 +1,48 @@
+﻿# auth
+
+``mermaid
+sequenceDiagram
+    participant U as User
+    participant H as HTTP Server
+    participant AH as AuthHandler
+    participant A as Auth
+    participant DB as MongoDB
+
+    rect rgb(200, 230, 200)
+        Note over U, DB: Signup Flow
+        U->>H: POST /api/auth/signup {username, email, password}
+        H->>AH: HandleSignup
+        AH->>A: Signup(username, email, password)
+        A->>A: bcrypt.GenerateFromPassword(password)
+        A->>DB: InsertOne(users collection)
+        DB-->>A: success
+        A-->>AH: nil
+        AH-->>U: 201 Created
+    end
+
+    rect rgb(200, 200, 230)
+        Note over U, DB: Login Flow
+        U->>H: POST /api/auth/login {username, password}
+        H->>AH: HandleLogin
+        AH->>A: Login(username, password)
+        A->>A: rateLimiter.Allow(ip)
+        A->>DB: FindOne(users collection)
+        DB-->>A: User document
+        A->>A: bcrypt.CompareHashAndPassword
+        A->>A: generateToken() â†’ JWT (HS256, 7 day)
+        A-->>AH: token
+        AH-->>U: 200 {token, username}
+    end
+
+    rect rgb(230, 200, 200)
+        Note over U, DB: Authenticated Request
+        U->>H: GET /api/chat/sessions
+        H->>MW[authMiddleware]: Validate JWT
+        MW->>A: ValidateToken(token)
+        A->>A: jwt.Parse + claims
+        A-->>MW: username
+        MW->>MW: context.WithValue(UserKey, username)
+        MW->>H: next(w, r.WithContext(ctx))
+    end
+
+``

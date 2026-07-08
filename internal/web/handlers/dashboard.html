@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCP Gateway Dashboard</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f1117; color: #e4e4e7; min-height: 100vh; }
+        .header { background: #1a1b23; border-bottom: 1px solid #2a2b35; padding: 16px 32px; display: flex; align-items: center; justify-content: space-between; }
+        .header h1 { font-size: 20px; color: #fff; }
+        .header .status { font-size: 12px; padding: 4px 12px; border-radius: 12px; background: #22c55e20; color: #22c55e; }
+        .container { padding: 24px 32px; max-width: 1200px; margin: 0 auto; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+        .card { background: #1a1b23; border: 1px solid #2a2b35; border-radius: 12px; padding: 20px; }
+        .card h3 { font-size: 13px; color: #71717a; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .card .value { font-size: 28px; font-weight: 600; color: #fff; }
+        .card .sub { font-size: 12px; color: #71717a; margin-top: 4px; }
+        table { width: 100%; border-collapse: collapse; font-size: 13px; }
+        th { text-align: left; padding: 8px 12px; color: #71717a; border-bottom: 1px solid #2a2b35; font-weight: 500; }
+        td { padding: 8px 12px; border-bottom: 1px solid #2a2b35; }
+        .badge-online { color: #22c55e; } .badge-offline { color: #ef4444; } .badge-unknown { color: #f59e0b; }
+        a { color: #a855f7; text-decoration: none; } a:hover { text-decoration: underline; }
+        .nav-links { display: flex; gap: 16px; } .nav-links a { font-size: 13px; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>MCP Gateway</h1>
+        <div style="display:flex;align-items:center;gap:16px;">
+            <div class="nav-links">
+                <a href="/chat">AI Chat</a>
+                <a href="/health">Health</a>
+            </div>
+            <span class="status" id="status-badge">● Connected</span>
+        </div>
+    </div>
+    <div class="container">
+        <div class="grid">
+            <div class="card"><h3>Servers</h3><div class="value" id="server-count">0</div><div class="sub">configured</div></div>
+            <div class="card"><h3>Tools</h3><div class="value" id="tool-count">0</div><div class="sub">available</div></div>
+            <div class="card"><h3>Online</h3><div class="value" id="online-count" style="color:#22c55e;">0</div><div class="sub">servers</div></div>
+            <div class="card"><h3>Requests</h3><div class="value" id="request-count">0</div><div class="sub">total</div></div>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+            <h3>Servers</h3>
+            <table><thead><tr><th>Name</th><th>Status</th><th>Tools</th><th>Latency</th><th>Last Check</th></tr></thead><tbody id="server-table"></tbody></table>
+        </div>
+
+        <div class="card" style="margin-bottom:16px;">
+            <h3>Available Tools</h3>
+            <table><thead><tr><th>Name</th><th>Description</th><th>Server</th></tr></thead><tbody id="tool-table"></tbody></table>
+        </div>
+
+        <div class="card">
+            <h3>Recent Logs</h3>
+            <table><thead><tr><th>Time</th><th>Method</th><th>Tool</th><th>Server</th><th>Status</th><th>Latency</th></tr></thead><tbody id="log-table"></tbody></table>
+        </div>
+    </div>
+
+    <script>
+        async function refresh() {
+            const [servers, tools, stats] = await Promise.all([
+                fetch('/api/servers').then(r=>r.json()),
+                fetch('/api/tools').then(r=>r.json()),
+                fetch('/api/stats').then(r=>r.json())
+            ]);
+            document.getElementById('server-count').textContent = servers.count || 0;
+            document.getElementById('tool-count').textContent = tools.count || 0;
+            document.getElementById('online-count').textContent = (servers.servers||[]).filter(s=>s.Status==='online').length;
+            document.getElementById('request-count').textContent = stats.total_requests || 0;
+
+            const st = document.getElementById('server-table');
+            st.innerHTML = (servers.servers||[]).map(s => {
+                const statusClass = 'badge-' + (s.Status||'unknown');
+                return `<tr><td>${s.Name||s.Config?.name||'?'}</td><td class="${statusClass}">${s.Status||'unknown'}</td><td>${(s.Tools||[]).length}</td><td>${s.Latency?Math.round(s.Latency/1000000)+'ms':'-'}</td><td>${s.LastCheck?new Date(s.LastCheck).toLocaleTimeString():'-'}</td></tr>`;
+            }).join('');
+
+            const tt = document.getElementById('tool-table');
+            tt.innerHTML = (tools.tools||[]).map(t => `<tr><td>${t.name||t.Name}</td><td>${t.description||t.Desc||''}</td><td>${t.server_name||t.ServerName||''}</td></tr>`).join('');
+
+            const logs = await fetch('/api/logs').then(r=>r.json());
+            const lt = document.getElementById('log-table');
+            lt.innerHTML = (logs.logs||[]).slice(0,20).map(l => `<tr><td>${l.timestamp?new Date(l.timestamp).toLocaleTimeString():l.created_at?new Date(l.created_at).toLocaleTimeString():'-'}</td><td>${l.method||l.Method||''}</td><td>${l.tool_name||l.ToolName||''}</td><td>${l.server_name||l.ServerName||''}</td><td style="color:${(l.status||l.Status)==='success'?'#22c55e':'#ef4444'}">${l.status||l.Status||''}</td><td>${l.latency_ms||l.LatencyMs||'-'}</td></tr>`).join('');
+        }
+        refresh();
+        setInterval(refresh, 5000);
+    </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+﻿# gateway
+
+``mermaid
+graph TB
+    subgraph "internal/mcp package"
+        G[Gateway<br/>gateway.go]
+        R[Registry<br/>registry.go]
+        F[Forwarder<br/>forwarder.go]
+        H[Health Checker<br/>health.go]
+    end
+
+    subgraph "config.yaml"
+        C[Server configs<br/>name, URL, tools]
+    end
+
+    G --> R
+    G --> F
+    H --> R
+
+    R --> C
+
+    F -->|HTTP POST| S1[Weather<br/>Server]
+    F -->|HTTP POST| S2[GitHub<br/>Server]
+    F -->|HTTP POST| S3[Crypto<br/>Server]
+    F -->|HTTP POST| S4[Search<br/>Server]
+    F -->|HTTP POST| S5[News<br/>Server]
+    F -->|HTTP POST| S6[URL<br/>Server]
+    F -->|HTTP POST| S7[Notes<br/>Server]
+
+    H -->|health ping| S1
+    H -->|health ping| S2
+    H -->|health ping| S3
+
+    R -->|FindServerByTool| G
+    F -->|forwardToServer| S1
+
+    subgraph "Registry"
+        R_LOAD[Load from config.yaml]
+        R_MAP[Build toolName->server map]
+        R_LIST[Expose ListServers / ListTools]
+    end
+
+    subgraph "Forwarder"
+        F_MARSHAL[Marshal MCPRequest to JSON]
+        F_POST[POST to server.URL + /mcp/message]
+        F_PARSE[Unmarshal JSON response]
+        F_RESULT[Return ForwardResult]
+    end
+
+``

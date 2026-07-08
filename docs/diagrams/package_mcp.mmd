@@ -1,0 +1,16 @@
+graph TB
+    subgraph "internal/mcp package"
+        GW[Gateway<br/>gateway.go]
+        REG[Registry<br/>registry.go]
+        FWD[Forwarder<br/>forwarder.go]
+        HLTH[Health Checker<br/>health.go]
+    end
+
+    GW --> REG
+    GW --> FWD
+    FWD --> REG
+    HLTH --> REG
+
+    GW ---|exported: New, Registry, ForwardToolCall| EXT
+    REG ---|exported: NewRegistry, FindServerByTool, GetServer, ListServers, ListTools| EXT
+    HLTH ---|exported: StartHealthChecker| EXT

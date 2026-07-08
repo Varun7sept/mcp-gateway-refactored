@@ -1,0 +1,30 @@
+﻿# package_ai
+
+``mermaid
+graph TB
+    subgraph "internal/ai package"
+        M[Manager<br/>manager.go]
+        PL[Planner<br/>planner.go]
+        MEM[MemoryStore<br/>memory.go]
+        PB[PromptBuilder<br/>prompt.go]
+        LLM_CL[LLM Client<br/>llm.go]
+        TE[ToolExecutor<br/>tool_executor.go]
+        HLP[Helpers<br/>helpers.go]
+    end
+
+    M --> PL
+    M --> MEM
+    M --> PB
+    M --> LLM_CL
+    M --> TE
+    M --> HLP
+
+    PL -->|planStep| M
+    MEM -->|MemoryEntry| M
+    PB -->|system prompt| M
+    LLM_CL -->|chatResponse| M
+    TE -->|toolDef| LLM_CL
+
+    M ---|exported: New, Memory, DecideAction, SynthesizeAnswer, RunAgent| EXT[External Callers]
+
+``

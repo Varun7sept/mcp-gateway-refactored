@@ -1,0 +1,34 @@
+﻿# sequence_toolcall
+
+``mermaid
+sequenceDiagram
+    participant M as AI Manager
+    participant GW as Gateway<br/>ForwardToolCall
+    participant REG as Registry<br/>FindServerByTool
+    participant FWD as forwardToServer
+    participant SRV as MCP Server
+
+    M->>GW: ForwardToolCall(ctx, req)
+    Note over M,GW: req = {method: "tools/call", params: {name, arguments}}
+
+    GW->>GW: Extract toolName from req.Params["name"]
+
+    GW->>REG: FindServerByTool("get_weather")
+    REG->>REG: Look up map["get_weather"]
+    REG-->>GW: ConnectedServer{Name: "weather", URL: "http://localhost:3001"}
+
+    GW->>FWD: forwardToServer(ctx, server, req)
+
+    FWD->>FWD: json.Marshal(req) â†’ body
+    FWD->>SRV: HTTP POST http://localhost:3001/mcp/message
+    Note over SRV: Server routes to tool handler
+    SRV-->>FWD: HTTP 200 + JSON-RPC response
+    FWD->>FWD: json.Unmarshal(body)
+    FWD-->>GW: parsed response (any)
+
+    GW-->>M: ForwardResult{ServerName: "weather", Response: {...}, Latency: 45ms}
+
+    M->>M: extractToolText(response)
+    M->>M: Append result to conversation history
+
+``
